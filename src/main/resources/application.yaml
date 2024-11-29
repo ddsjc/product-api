@@ -1,0 +1,20 @@
+##spring.application.name=test-tasks-for-my-warehouse
+server:
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost/task-warehouse
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update

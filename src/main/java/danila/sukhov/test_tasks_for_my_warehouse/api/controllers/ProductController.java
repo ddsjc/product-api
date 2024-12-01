@@ -85,7 +85,7 @@ public class ProductController {
                         );
                     }
                 });
-
+        //ObjectMapper, JAXB
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription() != null ? productDTO.getDescription() : product.getDescription());
         product.setExistence(productDTO.getExistence());

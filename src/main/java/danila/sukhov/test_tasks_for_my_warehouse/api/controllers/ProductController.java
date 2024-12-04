@@ -1,5 +1,8 @@
 package danila.sukhov.test_tasks_for_my_warehouse.api.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import danila.sukhov.test_tasks_for_my_warehouse.api.dtos.AskDTO;
 import danila.sukhov.test_tasks_for_my_warehouse.api.dtos.ProductDTO;
 import danila.sukhov.test_tasks_for_my_warehouse.api.exceptions.BadRequestException;
@@ -70,7 +73,7 @@ public class ProductController {
     }
 
     @PutMapping(UPDATE_PRODUCT)
-    public ProductDTO updateProduct(@PathVariable("product_id") Long productId, @Valid @RequestBody ProductDTO productDTO){
+    public ProductDTO updateProduct(@PathVariable("product_id") Long productId, @Valid @RequestBody ProductDTO productDTO) {
         if(productDTO.getName().trim().isBlank()){
             throw new BadRequestException("Name can't be empty");
         }
@@ -85,14 +88,15 @@ public class ProductController {
                         );
                     }
                 });
-        //ObjectMapper, JAXB
-        product.setName(productDTO.getName());
-        product.setDescription(productDTO.getDescription() != null ? productDTO.getDescription() : product.getDescription());
-        product.setExistence(productDTO.getExistence());
-        product.setCost(productDTO.getCost() != null ? productDTO.getCost() : product.getCost());
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.updateValue(product, productDTO);
+        } catch (JsonMappingException e) {
+            System.err.println("Error of mapping JSON: " + e.getMessage());
+        }
 
         product = productRepository.saveAndFlush(product);
-
         return productDTOFactory.createProductDto(product);
     }
 
